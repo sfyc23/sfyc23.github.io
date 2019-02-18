@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/signature/shortcut-icon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          对 Gank.io 做数据分析并可视化 - sfyc23 | 诗风悠存
+        
+    </title>
+
+    <link rel="canonical" href="https://sfyc23.github.io/article/gank-process/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/default-bg.png')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/sfyc_sign_white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blog" title="Blog">Blog</a>
+                            
+                              <a class="tag" href="/tags/#Python" title="Python">Python</a>
+                            
+                              <a class="tag" href="/tags/#爬虫" title="爬虫">爬虫</a>
+                            
+                              <a class="tag" href="/tags/#数据分析" title="数据分析">数据分析</a>
+                            
+                              <a class="tag" href="/tags/#numpy" title="numpy">numpy</a>
+                            
+                              <a class="tag" href="/tags/#pandas" title="pandas">pandas</a>
+                            
+                              <a class="tag" href="/tags/#gank" title="gank">gank</a>
+                            
+                              <a class="tag" href="/tags/#数据可视化" title="数据可视化">数据可视化</a>
+                            
+                        </div>
+                        <h1>对 Gank.io 做数据分析并可视化</h1>
+                        <h2 class="subheading">爬取 15~18 年之间 gank.io 中所有数据并进行数据分析</h2>
+                        <span class="meta">
+                            Posted by sfyc23 on
+                            2019-01-23
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Sfyc&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p><a href="https://gank.io/" target="_blank" rel="noopener">Gank.io</a> 是我做 Android 时特别喜欢去逛的网站之一。最近想找些东西做简单的数据处理。所以把 Gank 爬下来，先玩玩呗。<br>
+开发环境：Python3 、Jupyter Notebook。</p>
+</blockquote>
+<h2 id="1-爬取-gank-中的所有数据">1 爬取 Gank 中的所有数据。</h2>
+<p>先查看一下 Gank 的 <a href="https://gank.io/api" target="_blank" rel="noopener">API</a>。<br>
+通过 <a href="http://gank.io/api/day/history" target="_blank" rel="noopener">http://gank.io/api/day/history</a> 获取发过干货日期集合 history_date_list。根据日期，获取当天的数据。遍历集合，则可以得到所有的数据。</p>
+<h3 id="11-获取所有-gank-发布所有日期集合">1.1 获取所有 Gank 发布所有日期集合</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">history_date_url = <span class="string">'http://gank.io/api/day/history'</span></span><br><span class="line">history_res = requests.get(history_date_url)</span><br><span class="line">history_date_list = history_res.json().get(<span class="string">'results'</span>)</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码共取得 651 条的数据（截止于 2018-12-27 ）。<br>
+Gank 获取当天的数据的请求 API 为 <a href="https://gank.io/api/day/2016/05/11" target="_blank" rel="noopener">https://gank.io/api/day/2016/05/11</a>。<br>
+而获取到的日期格式为 『2018-11-28』。所以我们转换一下日期转成『2016/05/11』格式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import re # 正则</span><br><span class="line">history_date_list = [re.sub(r&apos;(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)&apos;, r&apos;\1/\2/\3&apos;, date) for date in history_date_list]</span><br></pre></td></tr></table></figure>
+<h3 id="12-开始爬取-gank-所有的数据">1.2 开始爬取 Gank 所有的数据</h3>
+<p>将数据存放于 gank_data_list 中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm_notebook <span class="keyword">as</span> tqdm <span class="comment">#用于显示进度条</span></span><br><span class="line"></span><br><span class="line">gank_data_list = []</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> tqdm(history_dates):</span><br><span class="line">    day_url = <span class="string">'https://gank.io/api/day/'</span> + data</span><br><span class="line">    res = requests.get(day_url)</span><br><span class="line">    <span class="keyword">if</span> res.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            categorys = res.json().get(<span class="string">'category'</span>)</span><br><span class="line">            result_datas = res.json().get(<span class="string">'results'</span>)</span><br><span class="line">            <span class="keyword">for</span> category <span class="keyword">in</span> categorys:</span><br><span class="line">                data_list = result_datas.get(category)</span><br><span class="line">                gank_data_list.extend(data_list)</span><br><span class="line">            time.sleep(<span class="number">0.5</span>)</span><br><span class="line">        <span class="keyword">except</span> (KeyError, TimeoutError):</span><br><span class="line">            print(<span class="string">"error:"</span> + data)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">len(gank_data_list)</span><br></pre></td></tr></table></figure>
+<p>out:</p>
+<pre><code>9261
+</code></pre>
+<p>共爬取了 9261 条数据(截止于 2018-12-27 )。</p>
+<h3 id="13-保存数据">1.3 保存数据。</h3>
+<p>将数据生成 DataFrame 并保存于文件 『gank.csv』中，以方便下次再使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存数据到 gank.csv.</span></span><br><span class="line">gank_df = pd.DataFrame(gank_data_list)</span><br><span class="line">gank_df.to_csv( <span class="string">'gank.csv'</span>, index=<span class="keyword">False</span>,encoding=<span class="string">'utf-8'</span>)</span><br></pre></td></tr></table></figure>
+<p>当下次再使用则直接使用『gank.csv』中的数据即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">gank_df = pd.read_csv(<span class="string">'gank.csv'</span>, engine=<span class="string">'python'</span>,encoding=<span class="string">'utf-8'</span>)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-处理并分析数据">2 处理并分析数据</h2>
+<p>首先我们简单查看一下数据的类型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gank_df.info()</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 9261 entries, 0 to 9260
+Data columns (total 11 columns):
+_id            9261 non-null object
+createdAt      9261 non-null object
+desc           9261 non-null object
+images         2385 non-null object
+publishedAt    9261 non-null object
+source         6262 non-null object
+type           9261 non-null object
+url            9261 non-null object
+used           9261 non-null bool
+who            8982 non-null object
+_date          9261 non-null object
+dtypes: bool(1), object(10)
+memory usage: 732.6+ KB
+</code></pre>
+<p>其中列『createdAt』、『publishedAt』应该为 datetime 类型。<br>
+『who』、『images』有缺失值，但对我下面数据分析无影响，所以不用管。</p>
+<p>转换 datetime 类型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gank_df[<span class="string">'createdAt'</span>] = pd.to_datetime(gank_df[<span class="string">'createdAt'</span>])</span><br><span class="line">gank_df[<span class="string">'publishedAt'</span>] = pd.to_datetime(gank_df[<span class="string">'publishedAt'</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="21-gank-发布类型比例">2.1  Gank 发布类型比例</h3>
+<p>先总的来看一下，Gank 发布类型的占比情况。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyecharts <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">gank_type_counts_ser = gank_df.type.value_counts()</span><br><span class="line">type_pie = Pie(<span class="string">"Gank 发布类型比例"</span>, <span class="string">"数据来源：gank.io"</span>, title_pos=<span class="string">'center'</span>)</span><br><span class="line">type_pie.add(<span class="string">"占比"</span>, gank_type_counts_ser.index, gank_type_counts_ser.values, is_random=<span class="keyword">True</span>,</span><br><span class="line">              radius=[<span class="number">30</span>, <span class="number">75</span>], rosetype=<span class="string">'radius'</span>,</span><br><span class="line">              is_legend_show=<span class="keyword">False</span>, is_label_show=<span class="keyword">True</span>)</span><br><span class="line">type_pie.use_theme(<span class="string">'dark'</span>)</span><br><span class="line"><span class="comment"># type_pie.render(path='Gank 发布类型比例.png') # 保存图  </span></span><br><span class="line">type_pie</span><br></pre></td></tr></table></figure>
+<p>Out:<br>
+<img src="http://cnd.sfyc23.xyz/Gank%20%E5%8F%91%E5%B8%83%E7%B1%BB%E5%9E%8B%E6%AF%94%E4%BE%8B.png" alt="Gank 发布类型比例"></p>
+<p>由图可知 Android 占比最大，其次为 iOS。<br>
+而从 2015 年 —— 2018 年之间这个占比又有哪些变化 ？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">timeline = Timeline(is_auto_play=<span class="keyword">True</span>, timeline_bottom=<span class="number">0</span>)</span><br><span class="line">timeline.use_theme(<span class="string">'dark'</span>)</span><br><span class="line"></span><br><span class="line">gank_year_group = gank_df.groupby(pd.Grouper(key=<span class="string">'publishedAt'</span>, freq=<span class="string">'1Y'</span>))</span><br><span class="line"><span class="keyword">for</span> name, group <span class="keyword">in</span> gank_year_group:</span><br><span class="line">    type_group_count_ser = group[<span class="string">'type'</span>].value_counts()</span><br><span class="line">    type_group_pie = Pie(<span class="string">"Gank 发布类型比例"</span>, <span class="string">"数据来源：gank.io"</span>, title_pos=<span class="string">'center'</span>)</span><br><span class="line">    type_group_pie.add(<span class="string">"占比"</span>, type_group_count_ser.index, type_group_count_ser.values, is_random=<span class="keyword">True</span>,</span><br><span class="line">              radius=[<span class="number">30</span>, <span class="number">75</span>], rosetype=<span class="string">'radius'</span>,</span><br><span class="line">              is_legend_show=<span class="keyword">False</span>, is_label_show=<span class="keyword">True</span>)</span><br><span class="line">    timeline.add(type_group_pie,name.year)</span><br><span class="line"></span><br><span class="line"><span class="comment"># timeline.render(path='Gank 每年发布类型比例趋势.gif')    </span></span><br><span class="line">timeline</span><br></pre></td></tr></table></figure>
+<p>Out:</p>
+<p><img src="http://cnd.sfyc23.xyz/Gank%20%E6%AF%8F%E5%B9%B4%E5%8F%91%E5%B8%83%E7%B1%BB%E5%9E%8B%E6%AF%94%E4%BE%8B%E8%B6%8B%E5%8A%BF.gif" alt="Gank 每年发布类型比例趋势"></p>
+<h3 id="22-提交-gank-的人">2.2 提交 Gank 的人</h3>
+<p>一共有多少人在 Gank 中提交过推荐呢。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(gank_df[<span class="string">'who'</span>].unique())</span><br></pre></td></tr></table></figure>
+<p>out:</p>
+<pre><code>854
+</code></pre>
+<p>可以看到一共有 854 人提交过代码。<br>
+使用柱形图绘制 Gank 提交 Top20 的大佬。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gank_df[<span class="string">'who'</span>].isna().sum()</span><br></pre></td></tr></table></figure>
+<p>out:</p>
+<pre><code>279
+</code></pre>
+<p>有 279 条数据提交的人没有留下名字。谢谢他们。<br>
+提交 Gank 数量最多的 20 位的大佬。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">who_counts_ser = gank_df[<span class="string">'who'</span>].value_counts()</span><br><span class="line"></span><br><span class="line">who_bar = Bar(<span class="string">"Gank 提交 Top20 的大佬"</span>, <span class="string">"来源：gank.io"</span>,width=<span class="number">1000</span>, height=<span class="number">600</span>)</span><br><span class="line">who_bar.use_theme(<span class="string">'vintage'</span>)</span><br><span class="line">who_bar.add(<span class="string">"提交次数"</span>, who_counts_ser.index[:<span class="number">20</span>], who_counts_ser.values[:<span class="number">20</span>],mark_point=[<span class="string">'max'</span>],</span><br><span class="line">            xaxis_rotate = <span class="number">30</span></span><br><span class="line">        )</span><br><span class="line"><span class="comment"># who_bar.render(path='Gank 提交 Top20 的大佬.png') # 保存图  </span></span><br><span class="line">who_bar</span><br></pre></td></tr></table></figure>
+<p>Out:<br>
+<img src="http://cnd.sfyc23.xyz/Gank%20%E6%8F%90%E4%BA%A4%20Top20%20%E7%9A%84%E5%A4%A7%E4%BD%AC.png" alt="Gank 提交 Top20 的大佬"></p>
+<h3 id="23-gank-每次发布时的数量">2.3 Gank 每次发布时的数量</h3>
+<p>感觉 Gank 的更新好像越来越不给力。是不是呢？我们来看一下有关数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">year_count_ser = gank_df.groupby(pd.Grouper(key=<span class="string">'publishedAt'</span>, freq=<span class="string">'1Y'</span>))[<span class="string">'_id'</span>].count() <span class="comment"># groupby each 1 年时间</span></span><br><span class="line">year_count_bar = Bar(<span class="string">"Gank 每年发布的数量"</span>, <span class="string">"来源：gank.io"</span>)</span><br><span class="line">year_count_bar.add(<span class="string">"发布数量"</span>, </span><br><span class="line">                   year_count_ser.index.strftime(<span class="string">'%Y'</span>), </span><br><span class="line">                   year_count_ser.values,</span><br><span class="line">                   is_label_show=<span class="keyword">True</span></span><br><span class="line">                    )</span><br><span class="line"><span class="comment"># year_count_bar.render('Gank 每年发布的数量.png')</span></span><br><span class="line">year_count_bar</span><br></pre></td></tr></table></figure>
+<p>Out:</p>
+<p><img src="http://cnd.sfyc23.xyz/Gank%20%E6%AF%8F%E5%B9%B4%E5%8F%91%E5%B8%83%E7%9A%84%E6%95%B0%E9%87%8F.png" alt="Gank 每年发布的数量"></p>
+<p>单从数据上来看，16 年总量最多。其次为 15、17、18年。<br>
+但实际却并一定是这样。Gank 是从 2015 年 5 月 18 日（<strong>gank_df[‘publishedAt’].min()</strong> 得到 ）开始发布数据。如果从 2015 初就开始的话，理论上的数量应该为 3611（计算在下面的代码中）。<br>
+果然从 2015、2016 年之后，2017 年、2018 年移动端（Gank 的主要内容为移动端）热度下降了很多。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime  </span><br><span class="line"></span><br><span class="line">end_dt = datetime.strptime(<span class="string">'2015-12-31'</span>, <span class="string">'%Y-%m-%d'</span>)</span><br><span class="line">start_dt = datetime.strptime(<span class="string">'2015-05-18'</span>, <span class="string">'%Y-%m-%d'</span>)</span><br><span class="line">time_delta = (end_dt - start_dt).days</span><br><span class="line">theory_nums = int(<span class="number">2246</span> * (<span class="number">365.0</span> / time_delta))</span><br><span class="line">print(theory_nums)</span><br></pre></td></tr></table></figure>
+<p>out:</p>
+<pre><code>3611.409691629956
+</code></pre>
+<h3 id="24-gank-每次更新时发布的数量">2.4 Gank 每次更新时发布的数量</h3>
+<p>Gank 每次更新时，数量又有哪些不一样呢？</p>
+<p>首先统计每次更新时的日期与数量，<br>
+方法 1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gank_every_counts_ser = gank_df.groupby(pd.Grouper(key=<span class="string">'publishedAt'</span>, freq=<span class="string">'D'</span>)).size() <span class="comment"># 以天单位计算数量</span></span><br><span class="line">gank_every_counts_ser = gank_every_counts_ser[gank_every_counts_ser &gt; <span class="number">0</span>] <span class="comment"># 取数量不为空的日期</span></span><br><span class="line">gank_every_counts_ser.index = gank_every_counts_ser.index.strftime(<span class="string">'%Y-%m-%d'</span>) <span class="comment"># 将日期格式化为 index</span></span><br><span class="line"><span class="comment"># gank_every_counts_ser.head()</span></span><br><span class="line"><span class="comment"># gank_every_counts_ser</span></span><br></pre></td></tr></table></figure>
+<p>方法 2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gank_df[<span class="string">'_date'</span>] = gank_df[<span class="string">'publishedAt'</span>].map(<span class="keyword">lambda</span> x : str(x)[:<span class="number">10</span>]) <span class="comment"># 生成一日期类，用于分组</span></span><br><span class="line">gank_every_counts_ser = gank_df.groupby(<span class="string">'_date'</span>).size() <span class="comment"># # 使用日期分组，并统计数量</span></span><br></pre></td></tr></table></figure>
+<p>生成图：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">gank_every_counts_line = Line(<span class="string">"Gank 每次发送的数量"</span>, <span class="string">"来源：gank.io"</span>)</span><br><span class="line">gank_every_counts_line.use_theme(<span class="string">'vintage'</span>)</span><br><span class="line">gank_every_counts_line.add(<span class="string">'日期'</span>, </span><br><span class="line">                    gank_every_counts_ser.index, </span><br><span class="line">                    gank_every_counts_ser.values,</span><br><span class="line">                    mark_point=[<span class="string">'max'</span>],               </span><br><span class="line">                    is_datazoom_show=<span class="keyword">True</span>  </span><br><span class="line">                    )</span><br><span class="line"><span class="comment"># gank_every_counts_line.render('Gank 每次发送的数量.png')</span></span><br><span class="line">gank_every_counts_line</span><br></pre></td></tr></table></figure>
+<p><img src="http://cnd.sfyc23.xyz/Gank%20%E6%AF%8F%E6%AC%A1%E5%8F%91%E9%80%81%E7%9A%84%E6%95%B0%E9%87%8F.png" alt="Gank 每次发送的数量"></p>
+<p>有点好奇，是不是每次发布数量越多，是因为断更时间更长导致。</p>
+<h3 id="25-发布数量与断更时间的比较">2.5. 发布数量与断更时间的比较</h3>
+<p>得到发布数量最多的 20 次日期，通过这个日期算过离上一次更新相差的日期。</p>
+<p>首先我们前一次发布时间减后一天发布时间，得到发布的时间间隔字典 date_interval_dict。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 得到发布时间间隔。</span></span><br><span class="line">gank_every_counts_ser_index = gank_every_counts_ser.index</span><br><span class="line"><span class="comment"># date_interval_dict 每次发布时间的间隔天数 dict.</span></span><br><span class="line">date_interval_dict = &#123; gank_every_counts_ser_index[<span class="number">0</span>] : <span class="number">0</span>&#125; <span class="comment"># 第一项 为 0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, gank_every_counts_ser_index.shape[<span class="number">0</span>]):</span><br><span class="line">    day = (pd.to_datetime(gank_every_counts_ser_index[i]) - pd.to_datetime(gank_every_counts_ser_index[i<span class="number">-1</span>])).days</span><br><span class="line">    date_interval_dict[gank_every_counts_ser_index[i]] = day</span><br><span class="line"><span class="comment"># date_interval_dict</span></span><br></pre></td></tr></table></figure>
+<p>然后得到发送数量最多的 20 个日期。</p>
+<p>发布数量与断更时间的比较：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发布数量最大的日期 top2o</span></span><br><span class="line">gank_every_ser_top20 = gank_every_counts_ser.sort_values(ascending=<span class="keyword">False</span>)[:<span class="number">20</span>]</span><br><span class="line"><span class="comment"># 通过上一项的数值得到当天离上一天的时间间隔</span></span><br><span class="line">date_interval_value = [date_interval_dict[index] <span class="keyword">for</span> index <span class="keyword">in</span> gank_every_ser_top20.index]</span><br><span class="line">gank_interval_line = Line(<span class="string">"发布数量与断更时间的比较"</span>, <span class="string">"来源：gank.io"</span>)</span><br><span class="line">gank_interval_line.use_theme(<span class="string">'vintage'</span>)</span><br><span class="line">gank_interval_line.add(<span class="string">'发布数量'</span>, </span><br><span class="line">                    gank_every_ser_top20.index, </span><br><span class="line">                    gank_every_ser_top20.values,</span><br><span class="line">                    mark_point=[<span class="string">'max'</span>]        </span><br><span class="line">                    )</span><br><span class="line">gank_interval_line.add(<span class="string">'间隔天数'</span>, </span><br><span class="line">                    gank_every_ser_top20.index, </span><br><span class="line">                    date_interval_value,</span><br><span class="line">                    mark_point=[<span class="string">'max'</span>]        </span><br><span class="line">                    )</span><br><span class="line"><span class="comment"># gank_interval_line.render('发布数量与断更时间的比较.png')</span></span><br><span class="line">gank_interval_line</span><br></pre></td></tr></table></figure>
+<p>Out:<br>
+<img src="http://cnd.sfyc23.xyz/%E5%8F%91%E5%B8%83%E6%95%B0%E9%87%8F%E4%B8%8E%E6%96%AD%E6%9B%B4%E6%97%B6%E9%97%B4%E7%9A%84%E6%AF%94%E8%BE%83.png" alt="发布数量与断更时间的比较"></p>
+<p>从上图看出这两者之间好像并无关联。<br>
+不过能不能换一个思路，不是断更时间越长，下一次发布的数量相对越多呢。</p>
+<h3 id="26-断更时间与发布数量的比较">2.6. 断更时间与发布数量的比较</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">date_interval_ser_top20 = pd.Series(date_interval_dict).sort_values(ascending=<span class="keyword">False</span>)[:<span class="number">20</span>] <span class="comment">#得到时间间隔最大 top20</span></span><br><span class="line"></span><br><span class="line">gank_interval_line2 = Line(<span class="string">"断更时间与发布数量的比较"</span>, <span class="string">"来源：gank.io"</span>)</span><br><span class="line">gank_interval_line2.use_theme(<span class="string">'vintage'</span>)</span><br><span class="line">gank_interval_line2.add(<span class="string">'间隔天数'</span>, </span><br><span class="line">                    date_interval_ser_top20.index, </span><br><span class="line">                    date_interval_ser_top20.values,</span><br><span class="line">                    mark_point=[<span class="string">'max'</span>]        </span><br><span class="line">                    )</span><br><span class="line"><span class="comment"># gank_interval_line2.add('数量平均数', </span></span><br><span class="line"><span class="comment">#                     date_interval_ser_top20.index, </span></span><br><span class="line"><span class="comment">#                     [int(gank_every_counts.mean()) for _ in range(20)] ,</span></span><br><span class="line"><span class="comment">#                     mark_point=['max']        </span></span><br><span class="line"><span class="comment">#                     )</span></span><br><span class="line">gank_interval_line2.add(<span class="string">'发布数量'</span>, </span><br><span class="line">                    date_interval_ser_top20.index, </span><br><span class="line">                    gank_every_counts_ser[date_interval_ser_top20.index],</span><br><span class="line">                    is_label_show=<span class="keyword">True</span></span><br><span class="line">                    )</span><br><span class="line"><span class="comment"># gank_interval_line2.render('断更时间与发布数量的比较.png')</span></span><br><span class="line">gank_interval_line2</span><br></pre></td></tr></table></figure>
+<p>Out:<br>
+<img src="http://cnd.sfyc23.xyz/%E6%96%AD%E6%9B%B4%E6%97%B6%E9%97%B4%E4%B8%8E%E5%8F%91%E5%B8%83%E6%95%B0%E9%87%8F%E7%9A%84%E6%AF%94%E8%BE%83.png" alt="断更时间与发布数量的比较"></p>
+<p>通过 gank_every_counts_ser.mean() 得到，<br>
+每次发布的平均值为 14 条，由上图好像也看不出来断更时间与发布数量有必然的关系 。<br>
+<strong>所以说更断的原因，主要还是因为数量少。</strong></p>
+<h3 id="27-每年中哪几个月大家最活跃的呢">2.7  每年中哪几个月大家最活跃的呢</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">year_month_line = Line(<span class="string">"最活跃的月份"</span>, <span class="string">"来源：gank.io"</span>)</span><br><span class="line">year_month_line.use_theme(<span class="string">'shine'</span>)</span><br><span class="line">year_group = gank_df.groupby(pd.Grouper(key=<span class="string">'publishedAt'</span>, freq=<span class="string">'1Y'</span>)) </span><br><span class="line"><span class="keyword">for</span> name, group <span class="keyword">in</span> year_group:</span><br><span class="line">    year_mouth_count_ser = group.groupby(pd.Grouper(key=<span class="string">'publishedAt'</span>, freq=<span class="string">'1M'</span>))[<span class="string">'_id'</span>].count()</span><br><span class="line">    year_month_line.add(str(name.year), </span><br><span class="line">                    year_mouth_count_ser.index.strftime(<span class="string">'%m'</span>).tolist(), </span><br><span class="line">                    year_mouth_count_ser.values.tolist(),</span><br><span class="line">                    mark_point=[<span class="string">'max'</span>] )</span><br><span class="line">year_month_line.render(<span class="string">'最活跃的月份.png'</span>)</span><br><span class="line">year_month_line</span><br></pre></td></tr></table></figure>
+<p>Out:<br>
+<img src="http://cnd.sfyc23.xyz/%E6%9C%80%E6%B4%BB%E8%B7%83%E7%9A%84%E6%9C%88%E4%BB%BD.png" alt="最活跃的月份"></p>
+<p>3 月至 5 月最大家都活跃的时间。</p>
+<h3 id="28-分享最多的网站-amp-博客">2.8 分享最多的网站 &amp; 博客</h3>
+<p>对（Android，iOS, 前端）分别做处理。</p>
+<p>根据列 url 生成一个新列 domain。<br>
+然后使用 type 对数据分类统计。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成新列</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_domain</span><span class="params">(url)</span>:</span></span><br><span class="line">    domain = re.findall(<span class="string">r'http[s]?://(.*?)/.*?'</span>,url)</span><br><span class="line">    <span class="keyword">if</span> domain:</span><br><span class="line">        <span class="keyword">return</span> domain[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> url</span><br><span class="line">gank_df[<span class="string">'domain'</span>] = gank_df[<span class="string">'url'</span>].map(get_domain)</span><br></pre></td></tr></table></figure>
+<p>对 Android 做处理:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">android_domain_ser = gank_df.groupby(<span class="string">'type'</span>).get_group(<span class="string">"Android"</span>)[<span class="string">'domain'</span>].value_counts()</span><br><span class="line">android_domain_ser[android_domain_ser &gt; <span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<p>Out:</p>
+<pre><code>github.com            2481
+www.jianshu.com        182
+mp.weixin.qq.com       126
+blog.csdn.net          121
+zhuanlan.zhihu.com      26
+url.cn                  24
+blog.mindorks.com       22
+rkhcy.github.io         14
+kymjs.com               13
+Name: domain, dtype: int64
+</code></pre>
+<p>Android 分享中超过 10 次的网站分别: <a href="https://github.com/" target="_blank" rel="noopener">Github</a> 、<a href="https://www.jianshu.com/" target="_blank" rel="noopener">简书</a>、微信分享、<a href="https://blog.csdn.net/" target="_blank" rel="noopener">CSDN 博客</a>、<a href="https://zhuanlan.zhihu.com/" target="_blank" rel="noopener">知乎专栏</a>、<a href="https://blog.mindorks.com/" target="_blank" rel="noopener">Mindroks</a>、<a href="http://rkhcy.github.io/" target="_blank" rel="noopener">HuYounger 的个人博客</a>、<a href="https://kymjs.com/" target="_blank" rel="noopener">张涛开源实验室</a>。</p>
+<p>对 iOS 做处理:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iOS_domain_ser = gank_df.groupby(<span class="string">'type'</span>).get_group(<span class="string">"iOS"</span>)[<span class="string">'domain'</span>].value_counts()</span><br><span class="line">iOS_domain_ser[iOS_domain_ser &gt; <span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<p>Out:</p>
+<pre><code>github.com               1580
+www.jianshu.com           185
+swift.gg                   58
+mp.weixin.qq.com           25
+medium.com                 22
+natashatherobot.com        22
+www.imlifengfeng.com       21
+christiantietze.de         20
+yulingtianxia.com          19
+realm.io                   17
+www.raywenderlich.com      14
+useyourloaf.com            13
+segmentfault.com           12
+Name: domain, dtype: int64
+</code></pre>
+<p>iOS 分享中超过 10 次的网站分别: <a href="https://github.com/" target="_blank" rel="noopener">Github</a> 、<a href="https://www.jianshu.com/" target="_blank" rel="noopener">简书</a>、<a href="http://swift.gg/" target="_blank" rel="noopener">Swift 翻译组</a>、微信分享、<a href="https://medium.com/" target="_blank" rel="noopener">Medium</a>、<a href="https://www.natashatherobot.com/" target="_blank" rel="noopener">Natasha The Robot</a>、 <a href="https://christiantietze.de/" target="_blank" rel="noopener">christiantietze</a>、<a href="http://yulingtianxia.com/" target="_blank" rel="noopener">玉令天下的博客</a>、<a href="https://realm.io/" target="_blank" rel="noopener">realm</a>、<a href="https://www.raywenderlich.com/" target="_blank" rel="noopener">raywenderlich</a>、<a href="https://useyourloaf.com/" target="_blank" rel="noopener">Use Your Loaf</a>、<a href="https://segmentfault.com/" target="_blank" rel="noopener">SegmentFault</a>。</p>
+<p>对前端做处理:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">前端_domain_ser = gank_df.groupby(&apos;type&apos;).get_group(&quot;前端&quot;)[&apos;domain&apos;].value_counts()</span><br><span class="line">前端_domain_ser[前端_domain_ser &gt; 5]</span><br></pre></td></tr></table></figure>
+<p>Out:</p>
+<pre><code>github.com            304
+zhuanlan.zhihu.com     79
+www.jianshu.com        13
+segmentfault.com        7
+mp.weixin.qq.com        6
+refined-x.com           6
+Name: domain, dtype: int64
+</code></pre>
+<p>前端分享中超过 5 次的网站分别: <a href="https://github.com/" target="_blank" rel="noopener">Github</a> 、<a href="https://zhuanlan.zhihu.com/" target="_blank" rel="noopener">知乎专栏</a>、<a href="https://www.jianshu.com/" target="_blank" rel="noopener">简书</a>、<a href="https://segmentfault.com/" target="_blank" rel="noopener">SegmentFault</a>、微信分享、<a href="http://refined-x.com/" target="_blank" rel="noopener">雅X共赏的前端技术博客</a>。</p>
+<hr>
+<h2 id="3-生成词云">3 生成词云</h2>
+<p>取出所以分享内容的标题，整合提取关键字，做成词云。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud, ImageColorGenerator</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gank_df = pd.read_csv(<span class="string">'gank.csv'</span>, engine=<span class="string">'python'</span>,encoding=<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="comment"># 过滤列 type为福利的项，取出列 desc 项中所有的值，将值转成 list</span></span><br><span class="line">desc_dict = gank_df[gank_df[<span class="string">'type'</span>] != <span class="string">'福利'</span>][<span class="string">'desc'</span>].tolist()</span><br><span class="line"><span class="comment"># 将 list 转成 str ，用于分词。</span></span><br><span class="line">desc_texts = <span class="string">' '</span>.join(desc_dict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分词</span></span><br><span class="line">word_cut_list = jieba.cut(desc_texts, cut_all=<span class="keyword">True</span>)</span><br><span class="line">word_space_cut_split = <span class="string">' '</span>.join(word_cut_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># </span></span><br><span class="line">coloring = np.array(Image.open(<span class="string">"gank_frog.jpg"</span>))</span><br><span class="line">my_wordcloud = WordCloud(background_color=<span class="string">"white"</span>, </span><br><span class="line">                         width = <span class="number">1280</span>,</span><br><span class="line">                         height = <span class="number">720</span>,</span><br><span class="line">                         max_words=<span class="number">500</span>,</span><br><span class="line">                         mask=coloring, </span><br><span class="line">                         max_font_size=<span class="number">200</span>, </span><br><span class="line">                         random_state=<span class="number">42</span>, </span><br><span class="line">                         font_path=<span class="string">r'simkai.ttf'</span> <span class="comment"># 中文字体</span></span><br><span class="line">                        ).generate(word_space_cut_split)</span><br><span class="line">image_colors = ImageColorGenerator(coloring)</span><br><span class="line">fig = plt.figure(figsize=(<span class="number">32</span>,<span class="number">18</span>))</span><br><span class="line">image_colors = ImageColorGenerator(coloring)</span><br><span class="line">plt.imshow(my_wordcloud.recolor(color_func=image_colors))</span><br><span class="line">plt.imshow(my_wordcloud)</span><br><span class="line">plt.axis(<span class="string">"off"</span>)</span><br><span class="line">plt.savefig(<span class="string">'gank_word_cloud.png'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://cnd.sfyc23.xyz/gank_word_cloud.png" alt="词云"></p>
+<p>代码中 gank_forg.jpg 用于色彩的提取的。</p>
+<p><img src="http://cnd.sfyc23.xyz/gank_frog.jpg" alt="+1s"></p>
+<hr>
+<h2 id="4-下载福利图">4 下载福利图</h2>
+<p>最后把福利图都下载下来吧。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing.pool <span class="keyword">import</span> ThreadPool</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">gank_df = pd.read_csv(<span class="string">'gank.csv'</span>, engine=<span class="string">'python'</span>,encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">girls_df = gank_df[gank_df[<span class="string">'type'</span>]==<span class="string">'福利'</span>][[<span class="string">'publishedAt'</span>,<span class="string">'url'</span>]]</span><br><span class="line"></span><br><span class="line">downloads_url = [(str(row[<span class="string">'publishedAt'</span>])[:<span class="number">10</span>],row[<span class="string">'url'</span>]) <span class="keyword">for</span> _ ,row <span class="keyword">in</span> girls_df.iterrows()]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放的文件夹</span></span><br><span class="line">image_folder = <span class="string">'福利'</span></span><br><span class="line"><span class="comment"># 如果不存在则生成</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(image_folder):</span><br><span class="line">    os.makedirs(image_folder)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_image</span><span class="params">(entry)</span>:</span></span><br><span class="line">    path, uri = entry</span><br><span class="line">    path = os.path.join(image_folder,<span class="string">f"<span class="subst">&#123;path&#125;</span>.jpg"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            res = requests.get(uri, stream=<span class="keyword">True</span>)</span><br><span class="line">            <span class="keyword">if</span> res.status_code == <span class="number">200</span>:</span><br><span class="line">                <span class="keyword">with</span> open(path, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    f.write(res.content)</span><br><span class="line">                time.sleep(<span class="number">2</span>)</span><br><span class="line">                <span class="comment">#print(f'已下载:&#123;path&#125;')</span></span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(<span class="string">f"请求出错: <span class="subst">&#123;path&#125;</span>"</span>)</span><br><span class="line">    <span class="keyword">return</span> path</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启多线程下载图片</span></span><br><span class="line">results = ThreadPool(<span class="number">8</span>).map(download_image, downloads_url)</span><br></pre></td></tr></table></figure>
+<p>out:</p>
+<pre><code>请求出错: 福利\2017-10-23.jpg
+</code></pre>
+<p>有一张图片因为不是安全链接，无法下载。</p>
+<hr>
+<h2 id="5代码与文件地址">5.代码与文件地址:</h2>
+<p>Github:  <a href="https://github.com/sfyc23/PythonDataProcess/tree/master/Gank" target="_blank" rel="noopener">https://github.com/sfyc23/PythonDataProcess/tree/master/Gank</a></p>
+<hr>
+<p>关于我：<a href="https://weibo.com/sfyc23" target="_blank" rel="noopener">微博</a>，<a href="https://www.jianshu.com/u/6e8801f536bb" target="_blank" rel="noopener">简书</a>，<a href="https://juejin.im/user/574cfe16c4c97100549a50c5" target="_blank" rel="noopener">掘金</a>，<a href="https://github.com/sfyc23" target="_blank" rel="noopener">Github</a>。</p>
+<hr>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/kotlin-add-space/" data-toggle="tooltip" data-placement="top" title="用 Kotlin 在中英文之间加入合适的空格">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/hexo-theme-huweihuang/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme HuWeihuang">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/donation/donation_alipay_sfyc.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/donation/donation_wechat_sfyc.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-爬取-gank-中的所有数据"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1 &#x722C;&#x53D6; Gank &#x4E2D;&#x7684;&#x6240;&#x6709;&#x6570;&#x636E;&#x3002;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#11-获取所有-gank-发布所有日期集合"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.1 &#x83B7;&#x53D6;&#x6240;&#x6709; Gank &#x53D1;&#x5E03;&#x6240;&#x6709;&#x65E5;&#x671F;&#x96C6;&#x5408;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12-开始爬取-gank-所有的数据"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">1.2 &#x5F00;&#x59CB;&#x722C;&#x53D6; Gank &#x6240;&#x6709;&#x7684;&#x6570;&#x636E;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#13-保存数据"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">1.3 &#x4FDD;&#x5B58;&#x6570;&#x636E;&#x3002;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-处理并分析数据"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2 &#x5904;&#x7406;&#x5E76;&#x5206;&#x6790;&#x6570;&#x636E;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#21-gank-发布类型比例"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">2.1  Gank &#x53D1;&#x5E03;&#x7C7B;&#x578B;&#x6BD4;&#x4F8B;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#22-提交-gank-的人"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">2.2 &#x63D0;&#x4EA4; Gank &#x7684;&#x4EBA;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#23-gank-每次发布时的数量"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">2.3 Gank &#x6BCF;&#x6B21;&#x53D1;&#x5E03;&#x65F6;&#x7684;&#x6570;&#x91CF;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#24-gank-每次更新时发布的数量"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">2.4 Gank &#x6BCF;&#x6B21;&#x66F4;&#x65B0;&#x65F6;&#x53D1;&#x5E03;&#x7684;&#x6570;&#x91CF;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#25-发布数量与断更时间的比较"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">2.5. &#x53D1;&#x5E03;&#x6570;&#x91CF;&#x4E0E;&#x65AD;&#x66F4;&#x65F6;&#x95F4;&#x7684;&#x6BD4;&#x8F83;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#26-断更时间与发布数量的比较"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">2.6. &#x65AD;&#x66F4;&#x65F6;&#x95F4;&#x4E0E;&#x53D1;&#x5E03;&#x6570;&#x91CF;&#x7684;&#x6BD4;&#x8F83;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#27-每年中哪几个月大家最活跃的呢"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">2.7  &#x6BCF;&#x5E74;&#x4E2D;&#x54EA;&#x51E0;&#x4E2A;&#x6708;&#x5927;&#x5BB6;&#x6700;&#x6D3B;&#x8DC3;&#x7684;&#x5462;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#28-分享最多的网站-amp-博客"><span class="toc-nav-number">2.8.</span> <span class="toc-nav-text">2.8 &#x5206;&#x4EAB;&#x6700;&#x591A;&#x7684;&#x7F51;&#x7AD9; &amp; &#x535A;&#x5BA2;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-生成词云"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3 &#x751F;&#x6210;&#x8BCD;&#x4E91;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-下载福利图"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">4 &#x4E0B;&#x8F7D;&#x798F;&#x5229;&#x56FE;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5代码与文件地址"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">5.&#x4EE3;&#x7801;&#x4E0E;&#x6587;&#x4EF6;&#x5730;&#x5740;:</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blog" title="Blog">Blog</a>
+                        
+                          <a class="tag" href="/tags/#Python" title="Python">Python</a>
+                        
+                          <a class="tag" href="/tags/#爬虫" title="爬虫">爬虫</a>
+                        
+                          <a class="tag" href="/tags/#数据分析" title="数据分析">数据分析</a>
+                        
+                          <a class="tag" href="/tags/#numpy" title="numpy">numpy</a>
+                        
+                          <a class="tag" href="/tags/#pandas" title="pandas">pandas</a>
+                        
+                          <a class="tag" href="/tags/#gank" title="gank">gank</a>
+                        
+                          <a class="tag" href="/tags/#数据可视化" title="数据可视化">数据可视化</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://gank.io/" target="_blank">Gank.io</a></li>
+                    
+                        <li><a href="https://juejin.im/user/574cfe16c4c97100549a50c5" target="_blank">掘金</a></li>
+                    
+                        <li><a href="https://www.jianshu.com/u/6e8801f536bb" target="_blank">简书</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/sfyc23">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/sfyc">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/sfyc23">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/sfyc23">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; sfyc23 2019 
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://sfyc23.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://sfyc23.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
